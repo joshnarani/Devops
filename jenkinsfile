@@ -1,9 +1,29 @@
-node{
-stage('checkout'){
-checkout([$class: 'GitSCM', branches: [[name: '*/master']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[credentialsId: '438d616d-fc2e-4897-8827-b5da8d82f6b3', url: 'https://github.com/joshnarani/Devops']]])
-}
-stage(build)
-{
-configfileProvider([
-bat'mvn clean compile package'])
-}}}
+pipeline{
+  agent any
+  
+  stages{
+    stage('compiled stage'){
+        steps{
+        withMaven(maven:'MAVEN_HOME'){
+          bat'mvn clean compile'
+        }
+    }
+    }
+    stage('Testing stage'){
+        steps{
+        withMaven(maven:'MAVEN_HOME'){
+          bat'mvn test'
+        }
+    }
+    }
+    
+       stage('deployment stage'){
+        steps{
+        withMaven(maven:'MAVEN_HOME'){
+          bat'mvn deploy'
+        }
+    }
+    }   
+    
+    }
+    }
